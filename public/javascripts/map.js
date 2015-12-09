@@ -1,4 +1,4 @@
-var map = L.map('map').setView([40.646782579355886, -8.687095642089844], 11);
+var map = L.map('map', {minZoom: 11}).setView([40.646782579355886, -8.687095642089844], 11);
 map.setMaxBounds([[40.760260692426165, -8.276824951171875], [40.499703081749566, -8.955917358398438]]);
 
 var nominating = new L.Control.Geocoder.Nominatim({
