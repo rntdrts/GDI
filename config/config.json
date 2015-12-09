@@ -1,0 +1,32 @@
+{
+  "mongoose": {
+    "uri": "mongodb://127.0.0.1:27017/test"
+  },
+  "default": {
+    "api": {
+      "version": "v1"
+    }
+  },
+  "configAuth": {
+    "facebookAuth": {
+      "clientID": "1646369025650980",
+      "clientSecret": "b0d5efc5a4cd3cf468994237adbce8e3",
+      "callbackURL": "http://127.0.0.1:3000/auth/facebook/callback"
+    },
+    "twitterAuth": {
+      "consumerKey": "eMsGHaN2oeDOEsEJWPQQifWUH",
+      "consumerSecret": "uGiVg9lsYB4qJ4J8f8ZXCmJ2VQyPOo4lEHsxMgZjo9rOMtLSO8",
+      "callbackURL": "http://127.0.0.1:3000/auth/twitter/callback"
+    },
+    "github": {
+      "clientID": "c06690822cd91e274a9c",
+      "clientSecret": "72ab67f37f89fc91e05953c942b924c0604f8380",
+      "callbackURL": "http://127.0.0.1:3000/auth/github/callback"
+    },
+    "googleAuth": {
+      "clientID": "386522950238-udpp1s5eubhtirkest1ke7vm980g8vbo.apps.googleusercontent.com",
+      "clientSecret": "fYqc5Gcof-bPQxIBBVKsqcYc",
+      "callbackURL": "http://127.0.0.1:3000/auth/google/callback"
+    }
+  }
+}
