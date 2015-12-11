@@ -34,5 +34,10 @@ map.on('click', function(e) {
             }
         }
     })
-})
+});
 
+var wfs = L.WFS('http://localhost:8080/geoserver/GDI/ows', {namespace: 'GDI'});
+
+wfs.getFeature(['schools'], {}, function(result, error){
+    map.addLayer(new L.geoJson(JSON.parse(result)));
+});
