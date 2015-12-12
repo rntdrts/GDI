@@ -189,3 +189,38 @@ legend.onAdd = function (map) {
 };
 
 legend.addTo(map);
+
+var MyCustomMarker = L.Icon.extend({
+    options: {
+        iconUrl: '/public/images/work.png',
+        shadowUrl: null,
+        iconAnchor: new L.Point(12, 12),
+        iconSize: new L.Point(24, 24)
+    }
+});
+
+var drawnItems = new L.FeatureGroup();
+map.addLayer(drawnItems);
+
+var options = {
+    position: 'topright',
+    draw: {
+        polyline: false,
+        polygon: false,
+        circle: false,
+        rectangle: false,
+        marker: {
+            icon: new MyCustomMarker()
+        }
+    },
+    edit: {
+        featureGroup: drawnItems
+    }
+};
+
+var drawControl = new L.Control.Draw(options);
+map.addControl(drawControl);
+
+map.on('draw:created', function (e) {
+    drawnItems.addLayer(e.layer);
+});

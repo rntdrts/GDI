@@ -1,7 +1,8 @@
 extends layout
 block header
     link(rel='stylesheet', href='/leaflet/leaflet.css')
-    link(rel='stylesheet', href='/leaflet-geocoder/Control.Geocoder.css')
+    link(rel='stylesheet', href='/leaflet/leaflet.draw.css')
+    link(rel='stylesheet', href='/leaflet/Control.Geocoder.css')
 block content
     .container
         .row
@@ -11,6 +12,7 @@ block content
     div(id="map").map
 block scripts
     script(type='text/javascript' src='/leaflet/leaflet.js')
-    script(type='text/javascript' src='/leaflet-geocoder/Control.Geocoder.js')
+    script(type='text/javascript' src='/leaflet/leaflet.draw.js')
+    script(type='text/javascript' src='/leaflet/Control.Geocoder.js')
     script(type='text/javascript' src='/public/javascripts/leaflet-wfs.js')
     script(type='text/javascript' src='/public/javascripts/map.js')
