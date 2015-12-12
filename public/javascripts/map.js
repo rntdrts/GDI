@@ -1,44 +1,34 @@
 var map = L.map('map', {minZoom: 11}).setView([40.646782579355886, -8.687095642089844], 11);
 map.setMaxBounds([[40.760260692426165, -8.276824951171875], [40.499703081749566, -8.955917358398438]]);
 
-var nominating = new L.Control.Geocoder.Nominatim({
-    serviceUrl:'http://nominatim.openstreetmap.org/',
-    geocodingQueryParams: {
-        countrycodes:'pt'
-    }});
 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
-var nexrad = L.tileLayer.wms("http://localhost:8080/geoserver/GDI/wms", {
+L.tileLayer.wms("http://localhost:8080/geoserver/GDI/wms", {
     layers: 'GDI:aveiro',
     format: 'image/png',
     transparent: true,
     attribution: ""
 }).addTo(map);
 
+
+var nominating = new L.Control.Geocoder.Nominatim({
+    serviceUrl:'http://nominatim.openstreetmap.org/',
+    geocodingQueryParams: {
+        countrycodes:'pt'
+    }});
+
 var geocoder = new L.Control.Geocoder({geocoder: nominating}).addTo(map);
 
-var marker;
-map.on('click', function(e) {
-    nominating.reverse(e.latlng, map.options.crs.scale(map.getZoom()), function(results) {
-        var r = results[0];
-        if (r) {
-            if (marker) {
-                marker.
-                setLatLng(r.center).
-                setPopupContent(r.html || r.name).
-                openPopup();
-            } else {
-                marker = L.marker(r.center).bindPopup(r.name).addTo(map).openPopup();
-            }
-        }
-    })
-});
+geocoder.markGeocode = function(result) {
+    var bbox = result.bbox;
+    map.fitBounds(bbox);
+};
 
 var wfs = L.WFS('http://localhost:8080/geoserver/GDI/ows', {namespace: 'GDI'});
 
-var secundarySchools, supermarkets, restaurants, convenienceStores, universities, pharmacies, houses, apartments;
+var secundarySchools, supermarkets, restaurants, convenienceStores, universities, pharmacies, houses, apartments, nurceries;
 wfs.getFeature(['secundary_schools'], {}, function(result, error) {
     secundarySchools = new L.geoJson(JSON.parse(result), {
         style: function(feature) {
@@ -71,7 +61,7 @@ wfs.getFeature(['supermarket'], {}, function(result, error) {
 wfs.getFeature(['restaurant'], {}, function(result, error) {
     restaurants = new L.geoJson(JSON.parse(result), {
         style: function(feature) {
-            return {color: '#F5866A'};
+            return {color: '#F74242'};
         },
         pointToLayer: function(feature, latlng) {
             return new L.CircleMarker(latlng, {radius: 5, fillOpacity: 0.85});
@@ -87,7 +77,7 @@ wfs.getFeature(['restaurant'], {}, function(result, error) {
 wfs.getFeature(['loja_conveniencia'], {}, function(result, error) {
     convenienceStores = new L.geoJson(JSON.parse(result), {
         style: function(feature) {
-            return {color: '#EAF56A'};
+            return {color: '#FFF67A'};
         },
         pointToLayer: function(feature, latlng) {
             return new L.CircleMarker(latlng, {radius: 5, fillOpacity: 0.85});
@@ -129,6 +119,23 @@ wfs.getFeature(['farmacy'], {}, function(result, error) {
     map.addLayer(pharmacies);
 });
 
+wfs.getFeature(['nursery'], {}, function(result, error) {
+    nurceries = new L.geoJson(JSON.parse(result), {
+        style: function(feature) {
+            return {color: '#191CC7'};
+        },
+        pointToLayer: function(feature, latlng) {
+            return new L.CircleMarker(latlng, {radius: 5, fillOpacity: 0.85});
+        },
+        onEachFeature: function (feature, layer) {
+            layer.bindPopup(feature.properties.name);
+        }
+    });
+    map.addLayer(nurceries);
+});
+
+
+
 wfs.getFeature(['house'], {}, function(result, error) {
     houses = new L.geoJson(JSON.parse(result), {
         style: function(feature) {
@@ -141,7 +148,6 @@ wfs.getFeature(['house'], {}, function(result, error) {
             layer.bindPopup(feature.properties.name);
         }
     });
-    map.addLayer(houses);
 });
 
 wfs.getFeature(['apartments'], {}, function(result, error) {
@@ -156,7 +162,6 @@ wfs.getFeature(['apartments'], {}, function(result, error) {
             layer.bindPopup(feature.properties.name);
         }
     });
-    map.addLayer(apartments);
 });
 
 
@@ -168,15 +173,16 @@ legend.onAdd = function (map) {
         data = [
             {color: '#F5C66A', name: 'Escolas Secundárias'},
             {color: '#6AF5D1', name: 'Super-Mercados'},
-            {color: '#F5866A', name: 'Restaurantes'},
-            {color: '#EAF56A', name: 'Lojas de Conveniência'},
+            {color: '#F74242', name: 'Restaurantes'},
+            {color: '#191CC7', name: 'Infantários'},
+            {color: '#FFF67A', name: 'Lojas de Conveniência'},
             {color: '#249D35', name: 'Universidades'},
-            {color: '#A86AF5', name: 'Farmácias'},
+            {color: '#A86AF5', name: 'Farmácias'}
         ];
 
     // loop through our density intervals and generate a label with a colored square for each interval
     for (var i = 0; i < data.length; i++) {
-        div.innerHTML += '<i style="background:' + data[i].color + '"></i> &ndash;' + data[i].name + '<br>';
+        div.innerHTML += '<i style="background:' + data[i].color + '"></i> &ndash;&nbsp;' + data[i].name + '<br>';
     }
 
     return div;
