@@ -210,7 +210,10 @@ var options = {
         circle: false,
         rectangle: false,
         marker: {
-            icon: new MyCustomMarker()
+            icon: new MyCustomMarker(),
+            drawStart: {
+                message: 'Clica para adicionar um novo local de trabalho.'
+            }
         }
     },
     edit: {
