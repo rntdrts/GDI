@@ -49,7 +49,6 @@ L.wfs.feature = L.wfs.extend({
         var request = new L.wfs.request();
 
         request.makeRequest(this._setFinalUrl(), 'GET', null, callback);
-        console.log(this._setFinalUrl());
     },
     _setFinalUrl: function() {
         var url = this.url + '&' + this.typeName,

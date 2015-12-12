@@ -11,7 +11,7 @@ L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 var nexrad = L.tileLayer.wms("http://localhost:8080/geoserver/GDI/wms", {
-    layers: 'GDI:teste',
+    layers: 'GDI:aveiro',
     format: 'image/png',
     transparent: true,
     attribution: ""
@@ -38,6 +38,43 @@ map.on('click', function(e) {
 
 var wfs = L.WFS('http://localhost:8080/geoserver/GDI/ows', {namespace: 'GDI'});
 
-wfs.getFeature(['schools'], {}, function(result, error){
-    map.addLayer(new L.geoJson(JSON.parse(result)));
+var secundarySchools, supermarkets, restaurants, convenienceStores, universities, pharmacies, houses, apartments;
+wfs.getFeature(['secundary_schools'], {}, function(result, error) {
+    secundarySchools = new L.geoJson(JSON.parse(result));
+    map.addLayer(secundarySchools);
+});
+
+wfs.getFeature(['supermarket'], {}, function(result, error) {
+    supermarkets = new L.geoJson(JSON.parse(result));
+    map.addLayer(supermarkets);
+});
+wfs.getFeature(['restaurant'], {}, function(result, error) {
+    restaurants = new L.geoJson(JSON.parse(result));
+    map.addLayer(restaurants);
+});
+
+
+wfs.getFeature(['loja_conveniencia'], {}, function(result, error) {
+    convenienceStores = new L.geoJson(JSON.parse(result));
+    map.addLayer(convenienceStores);
+});
+
+wfs.getFeature(['university'], {}, function(result, error) {
+    universities = new L.geoJson(JSON.parse(result));
+    map.addLayer(universities);
+});
+
+wfs.getFeature(['farmacy'], {}, function(result, error) {
+    pharmacies = new L.geoJson(JSON.parse(result));
+    map.addLayer(pharmacies);
+});
+
+wfs.getFeature(['house'], {}, function(result, error) {
+    houses = new L.geoJson(JSON.parse(result));
+    map.addLayer(houses);
+});
+
+wfs.getFeature(['apartments'], {}, function(result, error) {
+    apartments = new L.geoJson(JSON.parse(result));
+    map.addLayer(apartments);
 });
