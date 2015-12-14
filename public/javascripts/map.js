@@ -28,116 +28,18 @@ geocoder.markGeocode = function(result) {
 
 var wfs = L.WFS('http://localhost:8080/geoserver/GDI/ows', {namespace: 'GDI'});
 
-var secundarySchools, supermarkets, restaurants, convenienceStores, universities, pharmacies, houses, apartments, nurceries;
-wfs.getFeature(['secundary_schools'], {}, function(result, error) {
-    secundarySchools = new L.geoJson(JSON.parse(result), {
-        style: function(feature) {
-            return {color: '#F5C66A'};
-        },
-        pointToLayer: function(feature, latlng) {
-            return new L.CircleMarker(latlng, {radius: 5, fillOpacity: 0.85});
-        },
-        onEachFeature: function (feature, layer) {
-            layer.bindPopup(feature.properties.name);
-        }
-    });
-    map.addLayer(secundarySchools);
-});
+var data = [
+    {featureLayer: {}, layer: 'secundary_schools', color: '#F5C66A', name: 'Escolas Secundárias'},
+    {featureLayer: {}, layer: 'supermarket', color: '#6AF5D1', name: 'Super-Mercados'},
+    {featureLayer: {}, layer: 'restaurant', color: '#F74242', name: 'Restaurantes'},
+    {featureLayer: {}, layer: 'nursery', color: '#191CC7', name: 'Infantários'},
+    {featureLayer: {}, layer: 'loja_conveniencia', color: '#FFF67A', name: 'Lojas de Conveniência'},
+    {featureLayer: {}, layer: 'university', color: '#249D35', name: 'Universidades'},
+    {featureLayer: {}, layer: 'farmacy', color: '#A86AF5', name: 'Farmácias'}
+], buildingLayers = {};
 
-wfs.getFeature(['supermarket'], {}, function(result, error) {
-    supermarkets = new L.geoJson(JSON.parse(result), {
-        style: function(feature) {
-            return {color: '#6AF5D1'};
-        },
-        pointToLayer: function(feature, latlng) {
-            return new L.CircleMarker(latlng, {radius: 5, fillOpacity: 0.85});
-        },
-        onEachFeature: function (feature, layer) {
-            layer.bindPopup(feature.properties.name);
-        }
-    });
-    map.addLayer(supermarkets);
-});
-wfs.getFeature(['restaurant'], {}, function(result, error) {
-    restaurants = new L.geoJson(JSON.parse(result), {
-        style: function(feature) {
-            return {color: '#F74242'};
-        },
-        pointToLayer: function(feature, latlng) {
-            return new L.CircleMarker(latlng, {radius: 5, fillOpacity: 0.85});
-        },
-        onEachFeature: function (feature, layer) {
-            layer.bindPopup(feature.properties.name);
-        }
-    });
-    map.addLayer(restaurants);
-});
-
-
-wfs.getFeature(['loja_conveniencia'], {}, function(result, error) {
-    convenienceStores = new L.geoJson(JSON.parse(result), {
-        style: function(feature) {
-            return {color: '#FFF67A'};
-        },
-        pointToLayer: function(feature, latlng) {
-            return new L.CircleMarker(latlng, {radius: 5, fillOpacity: 0.85});
-        },
-        onEachFeature: function (feature, layer) {
-            layer.bindPopup(feature.properties.name);
-        }
-    });
-    map.addLayer(convenienceStores);
-});
-
-wfs.getFeature(['university'], {}, function(result, error) {
-    universities = new L.geoJson(JSON.parse(result), {
-        style: function(feature) {
-            return {color: '#249D35'};
-        },
-        pointToLayer: function(feature, latlng) {
-            return new L.CircleMarker(latlng, {radius: 5, fillOpacity: 0.85});
-        },
-        onEachFeature: function (feature, layer) {
-            layer.bindPopup(feature.properties.name);
-        }
-    });
-    map.addLayer(universities);
-});
-
-wfs.getFeature(['farmacy'], {}, function(result, error) {
-    pharmacies = new L.geoJson(JSON.parse(result), {
-        style: function(feature) {
-            return {color: '#A86AF5'};
-        },
-        pointToLayer: function(feature, latlng) {
-            return new L.CircleMarker(latlng, {radius: 5, fillOpacity: 0.85});
-        },
-        onEachFeature: function (feature, layer) {
-            layer.bindPopup(feature.properties.name);
-        }
-    });
-    map.addLayer(pharmacies);
-});
-
-wfs.getFeature(['nursery'], {}, function(result, error) {
-    nurceries = new L.geoJson(JSON.parse(result), {
-        style: function(feature) {
-            return {color: '#191CC7'};
-        },
-        pointToLayer: function(feature, latlng) {
-            return new L.CircleMarker(latlng, {radius: 5, fillOpacity: 0.85});
-        },
-        onEachFeature: function (feature, layer) {
-            layer.bindPopup(feature.properties.name);
-        }
-    });
-    map.addLayer(nurceries);
-});
-
-
-
-wfs.getFeature(['house'], {}, function(result, error) {
-    houses = new L.geoJson(JSON.parse(result), {
+wfs.getFeature(['house', 'apartments'], {}, function(result, error) {
+    buildingLayers.layer = new L.geoJson(JSON.parse(result), {
         style: function(feature) {
             return {color: '#1C5019'};
         },
@@ -150,45 +52,30 @@ wfs.getFeature(['house'], {}, function(result, error) {
     });
 });
 
-wfs.getFeature(['apartments'], {}, function(result, error) {
-    apartments = new L.geoJson(JSON.parse(result), {
-        style: function(feature) {
-            return {color: '#AFCAFF'};
-        },
-        pointToLayer: function(feature, latlng) {
-            return new L.CircleMarker(latlng, {radius: 5, fillOpacity: 0.85});
-        },
-        onEachFeature: function (feature, layer) {
-            layer.bindPopup(feature.properties.name);
-        }
+
+for(var i = 0; i < data.length; i++) {
+   callLayer(data[i]);
+}
+
+
+function callLayer(data) {
+    wfs.getFeature([data.layer], {}, function(result, error) {
+        data.featureLayer = new L.geoJson(JSON.parse(result), {
+            style: function(feature) {
+                return {color: data.color};
+            },
+            pointToLayer: function(feature, latlng) {
+                return new L.marker(latlng, {
+                    icon: new L.divIcon({className: data.layer + ' my-custom-icon pulsate'})
+                });
+            },
+            onEachFeature: function (feature, layer) {
+                layer.bindPopup(feature.properties.name);
+            }
+        });
     });
-});
+}
 
-
-var legend = L.control({position: 'bottomright'});
-
-legend.onAdd = function (map) {
-
-    var div = L.DomUtil.create('div', 'info legend'),
-        data = [
-            {color: '#F5C66A', name: 'Escolas Secundárias'},
-            {color: '#6AF5D1', name: 'Super-Mercados'},
-            {color: '#F74242', name: 'Restaurantes'},
-            {color: '#191CC7', name: 'Infantários'},
-            {color: '#FFF67A', name: 'Lojas de Conveniência'},
-            {color: '#249D35', name: 'Universidades'},
-            {color: '#A86AF5', name: 'Farmácias'}
-        ];
-
-    // loop through our density intervals and generate a label with a colored square for each interval
-    for (var i = 0; i < data.length; i++) {
-        div.innerHTML += '<i style="background:' + data[i].color + '"></i> &ndash;&nbsp;' + data[i].name + '<br>';
-    }
-
-    return div;
-};
-
-legend.addTo(map);
 
 var MyCustomMarker = L.Icon.extend({
     options: {
@@ -210,10 +97,7 @@ var options = {
         circle: false,
         rectangle: false,
         marker: {
-            icon: new MyCustomMarker(),
-            drawStart: {
-                message: 'Clica para adicionar um novo local de trabalho.'
-            }
+            icon: new MyCustomMarker()
         }
     },
     edit: {
@@ -221,9 +105,27 @@ var options = {
     }
 };
 
-var drawControl = new L.Control.Draw(options);
+var drawControl = new L.Control.Draw(options),
+    legend = new L.control.customLayer({
+        features: data,
+        closestPoints: drawnItems,
+        buildingLayer: buildingLayers
+    });
+
 map.addControl(drawControl);
 
 map.on('draw:created', function (e) {
+    if(drawnItems.getLayers().length === 0) {
+        legend.addTo(map);
+    }
     drawnItems.addLayer(e.layer);
+    legend.auxLayer.addLayer(e.layer);
 });
+
+map.on('draw:deleted', function(e) {
+    drawnItems.removeLayer(e.layer);
+    legend.auxLayer.removeLayer(e.layer);
+    if(drawnItems.getLayers().length === 0) {
+        map.removeControl(legend);
+    }
+})

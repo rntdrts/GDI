@@ -44,6 +44,8 @@ app.use(express.static(location + 'public'));
 app.use('/leaflet', express.static(location + '/node_modules/leaflet/dist/'));
 app.use('/leaflet', express.static(location + '/node_modules/leaflet-control-geocoder/dist/'));
 app.use('/leaflet', express.static(location + '/node_modules/leaflet-draw/dist/'));
+app.use('/leaflet', express.static(location + '/node_modules/leaflet-routing-machine/dist/'));
+app.use('/leaflet', express.static(location + '/node_modules/leaflet-knn/'));
 app.use('/public', express.static(location + '/public'));
 
 var multiuser = require('./routes/routes')(app, passport); // load our routes and pass in our app and fully configured passport
