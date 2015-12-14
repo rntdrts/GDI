@@ -13,8 +13,9 @@ L.control.customLayer = L.Control.extend({
         map.addLayer(this.nearestBuildings);
         this._map = map;
         this.container = L.DomUtil.create('div', 'info legend');
-        var data = this.options.features;
-
+        var data = this.options.features, title =  L.DomUtil.create('h3');
+        title.innerText = 'Escolha as suas preferências.';
+        this.container.appendChild(title);
         for (var i = 0; i < data.length; i++) {
             var checkbox = L.DomUtil.create('input'), iElement = L.DomUtil.create('i'), br = L.DomUtil.create('br');
             iElement.style.backgroundColor = data[i].color;
