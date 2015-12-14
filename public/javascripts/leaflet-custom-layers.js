@@ -30,7 +30,7 @@ L.control.customLayer = L.Control.extend({
             this._setEvents(checkbox, data[i]);
         }
 
-        var button = L.DomUtil.create('button');
+        var button = L.DomUtil.create('button', 'btn paper-raise');
         button.innerText = 'Edificios mais perto';
         L.DomEvent.addListener(button, 'click', this.onButtonClick, this);
 
