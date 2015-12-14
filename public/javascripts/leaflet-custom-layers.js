@@ -64,10 +64,11 @@ L.control.customLayer = L.Control.extend({
                 this.layerSelection.addLayer(nearest[i].layer);
                 this.auxLayer.addLayer(nearest[i].layer)
             }
+            data.selectedLayers = nearest;
         } else {
-            for (var i = 0; i < nearest.length; i++) {
-                this.layerSelection.removeLayer(nearest[i].layer);
-                this.auxLayer.removeLayer(nearest[i].layer)
+            for (var i = 0; i < data.selectedLayers.length; i++) {
+                this.layerSelection.removeLayer(data.selectedLayers[i].layer);
+                this.auxLayer.removeLayer(data.selectedLayers[i].layer)
 
             }
         }
